@@ -1,0 +1,7 @@
+{
+  "python.pythonPath": "bin/python3.9",
+  "python.lintiting.pylintEnabled": true,
+  "files.autoSave": "onFocusChange",
+  "python.createEnvironment.contentButton": "hide",
+  "python.autoComplete.extraPaths": ["lib/python3.9/site-packages"]
+}
