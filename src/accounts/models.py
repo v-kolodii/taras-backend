@@ -1,7 +1,8 @@
 '''User model'''
-from django.db.models import (EmailField, BooleanField, CharField, DateTimeField)
+from django.db.models import (EmailField, BooleanField, CharField, DateTimeField, IntegerChoices, IntegerField)
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
+from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
     """User manager"""
@@ -41,6 +42,14 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     ''' Class representing a User '''
+    class UserRank(IntegerChoices):
+        """Class representing an User status choice"""
+        KOZAK = 0
+        OTAMAN = 1
+        SOTNYK = 2
+        POLKOVNYK = 3
+        KOSHOVY = 4
+        HETMAN = 5
     email = EmailField(unique=True, max_length=255)
     phone = CharField(verbose_name='phone', max_length=30, null=True)
     name = CharField(max_length=255, blank=True, null=True)
@@ -50,6 +59,7 @@ class User(AbstractBaseUser):
     moderator = BooleanField(default=False)
     is_active = BooleanField(default=True)
     timestamp = DateTimeField(auto_now_add=True)
+    rank = IntegerField(_("User rank"), choices=UserRank.choices, default=UserRank.KOZAK)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -58,7 +68,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         '''return email for str interprete'''
-        return  str(self.email)
+        return  self.get_full_name()
     
     def get_full_name(self):
         '''return full name or email'''
