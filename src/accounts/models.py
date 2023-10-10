@@ -1,7 +1,7 @@
 '''User model'''
 from django.db.models import (EmailField, BooleanField, CharField, DateTimeField, IntegerChoices, IntegerField)
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, identify_hasher
 from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
@@ -93,7 +93,9 @@ class User(AbstractBaseUser):
         return True if self.admin else self.staff
 
     def save(self, *args, **kwargs):
-        print(self.password)
-        if not self.id and not self.staff and not self.admin:
+        try:
+            _alg = identify_hasher(self.password)
+        except ValueError:
             self.password = make_password(self.password)
+            
         super().save(*args, **kwargs)
