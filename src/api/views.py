@@ -31,8 +31,9 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Returns the Category list or the requested one
     """
-    queryset = Category.objects.all()
+    queryset = Category.objects.prefetch_related('appeals')
     serializer_class = CategorySerializer
+    http_method_names = ['get']
 
 class UserViewSet(viewsets.ModelViewSet):
     """
