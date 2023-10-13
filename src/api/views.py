@@ -68,7 +68,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = model.objects.all()
     serializer_class = UserSerializer
     http_method_names = ['get', 'post', 'delete', 'patch']
-    permission_classes = [permissions.IsAdminUser]
 
     def list(self, request, *args, **kwargs):
         users = self.model.objects.all()
